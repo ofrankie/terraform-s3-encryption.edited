@@ -2,7 +2,7 @@
 # our test bucket
 # ----------------------------------------------------------------------------------------
 
-resource "aws_s3_bucket" "ssetest" {
+resource "aws_s3_bucket" "desecurebucket" {
   bucket_prefix = "${var.base_name}"
   acl           = "private"
   region        = "${var.aws_region}"
@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "ssetest" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = "${aws_kms_key.ssetest.arn}"
+        kms_master_key_id = "${aws_kms_key.desecurebucket.arn}"
         sse_algorithm     = "aws:kms"
       }
     }
@@ -23,8 +23,8 @@ resource "aws_s3_bucket" "ssetest" {
 # does NOT deny access based on other criteria. If your account has principals that are allowed
 # broad S3 access, they will still be able to read and write the bucket.
 #
-resource "aws_s3_bucket_policy" "ssetest" {
-  bucket = "${aws_s3_bucket.ssetest.id}"
+resource "aws_s3_bucket_policy" "desecurebucket" {
+  bucket = "${aws_s3_bucket.desecurebucket.id}"
 
   policy = <<POLICY
 {
@@ -33,17 +33,17 @@ resource "aws_s3_bucket_policy" "ssetest" {
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${aws_iam_role.testhost.arn}"
+        "AWS": "arn:aws:iam::414514217411:user/exp-admin"
       },
       "Action":[
         "s3:GetObject*",
         "s3:PutObject*",
         "s3:DeleteObject*"
       ],
-      "Resource": "${aws_s3_bucket.ssetest.arn}/*",
+      "Resource": "${aws_s3_bucket.desecurebucket.arn}/*",
       "Condition" : {
         "StringEquals": {
-          "aws:sourceVpce": "${aws_vpc_endpoint.s3endpoint.id}"
+          "aws:sourceVpce": ""
         }
       }
     }

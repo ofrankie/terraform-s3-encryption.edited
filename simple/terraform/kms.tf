@@ -1,9 +1,9 @@
 data "aws_caller_identity" "current" {}
 
-resource "aws_kms_key" "ssetest" {
+resource "aws_kms_key" "desecurebucket" {
   deletion_window_in_days = 7
   tags                    = "${merge(map("Name", "${var.base_name}"), var.tags)}"
-  description             = "Key for SSE in S3 for ssetest"
+  description             = "Key for Encryption in S3 for desecurebucket"
 
   policy = <<Policy
 {
@@ -18,28 +18,13 @@ resource "aws_kms_key" "ssetest" {
       },
       "Action": "kms:*",
       "Resource": "*"
-    },
-    {
-      "Sid": "Allow EC2 Role to use key",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${aws_iam_role.testhost.arn}"
-      },
-      "Action": [
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:ReEncrypt*",
-        "kms:GenerateDataKey*",
-        "kms:DescribeKey"
-      ],
-      "Resource": "*"
     }
   ]
 }
 Policy
 }
 
-resource "aws_kms_alias" "ssetest" {
-  name          = "alias/ssetest"
-  target_key_id = "${aws_kms_key.ssetest.id}"
+resource "aws_kms_alias" "desecurebucket" {
+  name          = "alias/desecurebucket"
+  target_key_id = "${aws_kms_key.desecurebucket.id}"
 }
