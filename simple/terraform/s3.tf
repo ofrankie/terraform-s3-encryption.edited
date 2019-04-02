@@ -91,7 +91,7 @@ resource "aws_s3_bucket_policy" "dev-desecurebucket" {
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::414514217411:user/exp-admin"
+        "AWS": "arn:aws:iam::xxxxxxxxxxx:user/yyyyyy"
       },
       "Action":[
         "s3:GetObject*",
@@ -141,7 +141,7 @@ resource "aws_s3_bucket_policy" "qa-desecurebucket" {
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::414514217411:user/exp-admin"
+        "AWS": "arn:aws:iam::xxxxxxxxxxx:user/yyyyyy"
       },
       "Action":[
         "s3:GetObject*",
@@ -192,7 +192,7 @@ resource "aws_s3_bucket_policy" "prod-desecurebucket" {
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::414514217411:user/exp-admin"
+        "AWS": "arn:aws:iam::xxxxxxxxxxx:user/yyyyyy"
       },
       "Action":[
         "s3:GetObject*",
