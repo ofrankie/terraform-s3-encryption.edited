@@ -3,11 +3,20 @@ variable "aws_region" {
 }
 
 
-variable "base_name" {
+variable "dev-base_name" {
   description = "string used to base various names on"
-  default = "de-secure"
+  default = "dev-de-secure"
 }
 
+variable "qa-base_name" {
+  description = "string used to base various names on"
+  default = "qa-de-secure"
+}
+
+variable "prod-base_name" {
+  description = "string used to base various names on"
+  default = "prod-de-secure"
+}
 variable "tags" {
   default = {
     "project" = "de-secure"
