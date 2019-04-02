@@ -62,14 +62,6 @@ resource "aws_secretsmanager_secret_version" "PROD-SMK_FFB_REST_API_KEY_SecretVe
 }
 
 
-# Secet  datasource by name
-
-#data "aws_secretsmanager_secret" "DEV_SMK_FFS_RE_AP_CERT" {
- # name = "DEV_SMK_FFS_RE_AP_CERT"
-#}
-
-
-#
 # Bucket Policy - dev-desecurebucket
 resource "aws_s3_bucket" "dev-desecurebucket" {
   bucket_prefix = "${var.dev-base_name}"
