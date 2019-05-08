@@ -69,8 +69,6 @@ data "template_file" "devbucketarn" {
 
   vars {
     devbucket = "${aws_s3_bucket.dev-desecurebucket.arn}/*"
-    qabucket   = "${aws_s3_bucket.qa-desecurebucket.arn}/*"
-    prodbucket = "${aws_s3_bucket.prod-desecurebucket.arn}/*"
     test_role_arn = "${var.project_name}_test_lambda_role"
     caller_identity = "${data.aws_caller_identity.current.account_id}"
   }
@@ -85,6 +83,7 @@ resource "aws_s3_bucket_policy" "dev-desecurebucket" {
 
 }
 
+#====================================================
 data "template_file" "qabucketarn" {
   template = "${file("qa.bucketpolicy.json.tpl")}"
 
@@ -104,6 +103,7 @@ resource "aws_s3_bucket_policy" "qa-desecurebucket" {
 
 }
 
+#====================================================
 data "template_file" "prodbucketarn" {
   template = "${file("prod.bucketpolicy.json.tpl")}"
 
