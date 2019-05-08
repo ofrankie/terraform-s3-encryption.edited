@@ -1,6 +1,7 @@
 # ----------------------------------------------------------------------------------------
 #  Secret Manager
 # ----------------------------------------------------------------------------------------r
+variable "project_name" { default= "name"}
 resource "aws_secretsmanager_secret" "DEV-SMK_CA_API_KEY" {
   name = "DEV/SMK_CA_API_KEY"
   description = "DEV SMK_CA_API_KEY Secret"
@@ -62,6 +63,28 @@ resource "aws_secretsmanager_secret_version" "PROD-SMK_FFB_REST_API_KEY_SecretVe
 }
 
 
+#====================================================
+data "template_file" "devbucketarn" {
+  template = "${file("dev.bucketpolicy.json.tpl")}"
+
+  vars {
+    resource = "${aws_s3_bucket.dev-desecurebucket.arn}"
+    test_role_arn = "${var.project_name}_test_lambda_role"
+    caller_identity = "${data.aws_caller_identity.current.account_id}"
+  }
+}
+
+
+
+resource "aws_s3_bucket_policy" "dev-desecurebucket" {
+  bucket = "${aws_s3_bucket.dev-desecurebucket.id}"
+
+  policy = "${data.template_file.devbucketarn.rendered}"
+
+}
+
+#===============================================================
+
 # Bucket Policy - dev-desecurebucket
 resource "aws_s3_bucket" "dev-desecurebucket" {
   bucket_prefix = "${var.dev-base_name}"
@@ -80,37 +103,6 @@ resource "aws_s3_bucket" "dev-desecurebucket" {
 }
 
 
-
-resource "aws_s3_bucket_policy" "dev-desecurebucket" {
-  bucket = "${aws_s3_bucket.dev-desecurebucket.id}"
-
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::xxxxxxxxxxx:user/yyyyyy"
-      },
-      "Action":[
-        "s3:GetObject*",
-        "s3:PutObject*",
-        "s3:DeleteObject*"
-      ],
-      "Resource": "${aws_s3_bucket.dev-desecurebucket.arn}/*",
-      "Condition" : {
-        "StringEquals": {
-          "aws:sourceVpce": ""
-        }
-      }
-    }
-  ]
-}
-POLICY
-}
-
-#
 # Bucket Policy - qa-desecurebucket
 resource "aws_s3_bucket" "qa-desecurebucket" {
   bucket_prefix = "${var.qa-base_name}"
