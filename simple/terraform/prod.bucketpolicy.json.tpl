@@ -9,7 +9,7 @@
       ],
       "Effect": "Allow",
       "Resource": [ 
-        "${devbucket}"
+        "${prodbucket}"
       ],
       "Principal": {
         "AWS": [
